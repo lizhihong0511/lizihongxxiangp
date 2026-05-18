@@ -1,0 +1,24 @@
+services:
+  # Backend API
+  - type: web
+    name: exam-prep-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: ADMIN_IDS
+        value: u_0a0c8bf6-1764-47db-aa4c-b0e077abd7ee
+      - key: CORS_ORIGINS
+        value: "*"
+
+  # Frontend static site
+  - type: web
+    name: exam-prep-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://exam-prep-backend.onrender.com
